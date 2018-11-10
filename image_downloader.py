@@ -1,8 +1,10 @@
 
 import os
+import re
+import time
 
 from urllib.error import HTTPError, URLError
-from urllib.request import urlretrieve, install_opener, build_opener
+from urllib.request import urlretrieve, install_opener, build_opener, Request, urlopen
 
 
 def save_images_from_urls(urls, directory, prefix):
@@ -29,8 +31,38 @@ def save_images_from_urls(urls, directory, prefix):
 
 
 def dl_image_from_google(search, directory='F:/Images/'):
-	pass
+	# Building url - not using url builder, since the query parameters here are trivial
+	query = f"https://www.google.com/search?tbm=isch&q={search}&oq={search}"
+
+	# Makes sure that Google doesn't think that this script is a web-scraper
+	# Google will respond with a 403 Forbidden Error otherwise
+	req = Request(query, headers={'User-Agent': 'Mozilla/5.0'})
+	res = urlopen(req).read()
+
+	# To make debugging easier - otherwise the entire HTML comes in one line
+	res = res.decode().replace('><', '>\n<')
+
+	# All image thumbnails show up following the regex below, all other <img> tags are not thumbnails
+	f = re.findall(r'<img\sheight="(\d+)"\ssrc="([^"]+)"\swidth="(\d+)"\salt="[^"]+">', res)
+
+	# Getting a list of only the urls - we are keeping other info in f for debugging
+	# Also, adding flexibility for future code
+	urls = [ url for height, url, width in f ]
+
+	# Downloading the images from the scraped urls into passed directory
+	print("Saving images to disk...")
+	save_images_from_urls(urls, directory + search + '/', "IMG")
+
+	print(f"{len(f)} images were saved")
 
 
 if __name__ == '__main__':
-	print("Hello Scrapers!")
+	# Testing dl_image_from_google
+	print("Starting HTML Scrape from Google Images")
+	print()
+	tic = time.time()
+	dl_image_from_google('kitten')
+	toc = time.time()
+	print()
+	print("Ending HTML Scrape from Google Images")
+	print(f"Elapsed time: {toc - tic} seconds")
