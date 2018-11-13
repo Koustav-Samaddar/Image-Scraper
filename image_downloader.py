@@ -31,7 +31,7 @@ def save_images_from_urls(urls, directory, prefix, limit=1000):
 	for url in urls:
 		try:
 			# Images are distinguished by a 5 digit zero-padded id
-			urlretrieve(url, '{0:s}{1:s}_{2:05d}.png'.format(directory, prefix, i + 1))
+			urlretrieve(url, '{0:s}{1:s}_{2:05d}.png'.format(directory, prefix, i))
 		except (HTTPError, URLError) as e:
 			# If for some reason we fail to download an image, ignore and continue
 			fail.append("{0:s}: {1:s}\n".format(type(e).__name__, url))
