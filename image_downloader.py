@@ -84,7 +84,7 @@ def dl_image_from_google(search, directory='F:/Images/'):
 
 	# Downloading the images from the scraped urls into passed directory
 	print("Saving images to disk...")
-	n_imgs = save_images_from_urls(urls, directory + search + '/', "IMG")
+	n_imgs = save_images_from_urls(urls, directory + search.replace(' ', '_') + '/', "IMG")
 
 	print(f"{n_imgs} images were saved")
 
@@ -154,29 +154,29 @@ def dl_image_from_firefox(search_kw, directory='F:/Images/', limit=1000):
 	urls = [x for x in ret if x is not None]
 
 	# Download all the images
-	n_imgs = save_images_from_urls(urls, directory=directory + search_kw + '/', prefix="IMG", limit=limit)
+	n_imgs = save_images_from_urls(urls, directory=directory + search_kw.replace(' ', '_') + '/', prefix="IMG", limit=limit)
 
 	print(f"Downloaded {n_imgs} images of {search_kw} from Google Images")
 
 
 if __name__ == '__main__':
 	# Testing dl_image_from_google
-	print("Starting HTML Scrape from Google Images")
-	print()
-	tic = time.time()
-	dl_image_from_google('borders')
-	toc = time.time()
-	print()
-	print("Ending HTML Scrape from Google Images")
-	print(f"Elapsed time: {toc - tic} seconds")
-	print()
+	# print("Starting HTML Scrape from Google Images")
+	# print()
+	# tic = time.time()
+	# dl_image_from_google('borders')
+	# toc = time.time()
+	# print()
+	# print("Ending HTML Scrape from Google Images")
+	# print(f"Elapsed time: {round(toc - tic, 2)} seconds")
+	# print()
 
 	# Testing dl_image_from_firefox
 	print("Starting Selenium 'Scrape' from Google Image")
 	print()
 	tic = time.time()
-	dl_image_from_firefox('marble', limit=50)
+	dl_image_from_firefox('Eagle bird')
 	toc = time.time()
 	print()
 	print("Ending Selenium 'Scrape' from Google Image")
-	print(f"Elapsed time: {toc - tic} seconds.")
+	print(f"Elapsed time: {(toc - tic) // 60} minutes and {round((toc - tic) % 60, 3)} seconds.")
