@@ -1,6 +1,7 @@
 
 import os
 import glob
+import time
 
 from PIL import Image
 
@@ -13,6 +14,7 @@ def lower_image_resolutions(tgt_size, src_dir, dst_dir):
 	:param dst_dir: str -> new directory to store semi-formatted images
 	:return: None
 	"""
+	tic = time.time()
 	x, y = tgt_size, tgt_size
 
 	# Create destination folder if it doesn't exist already
@@ -21,6 +23,7 @@ def lower_image_resolutions(tgt_size, src_dir, dst_dir):
 	except FileExistsError:
 		pass
 
+	n_usable_imgs = 0
 	# Iterate over files in src_dir
 	for src_file in glob.glob(os.path.join(os.path.abspath(src_dir), '*.png')):
 		# Separating out file name
@@ -37,6 +40,8 @@ def lower_image_resolutions(tgt_size, src_dir, dst_dir):
 		w, h = im.size
 		if w < x or h < y:
 			continue
+
+		n_usable_imgs += 1
 
 		# Source image is not a square, a.k.a aspect ratio isn't 1:1
 		if w != h:
@@ -88,7 +93,13 @@ def lower_image_resolutions(tgt_size, src_dir, dst_dir):
 		# Save the resized image into the destination folder
 		im.save(os.path.join(os.path.abspath(dst_dir), fname) + '.png', 'PNG')
 
+	toc = time.time()
+	print(f"Elapsed time: {(toc - tic) // 60} minutes and {round((toc - tic) % 60, 3)} seconds.")
+	print(f"Re-formatted {n_usable_imgs} images.")
+	print()
+
 
 if __name__ == '__main__':
 	# Test with images from F:\Images\*
-	lower_image_resolutions(128, 'F:/Images/eagle', 'F:/Images/eagle_fmt')
+	lower_image_resolutions(128, 'F:/Images/Eagle_bird', 'F:/Images/Eagle_bird_128_fmt')
+	lower_image_resolutions(128, 'F:/Images/Falcon_bird', 'F:/Images/Falcon_bird_128_fmt')
