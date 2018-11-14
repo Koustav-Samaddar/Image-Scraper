@@ -91,7 +91,7 @@ def lower_image_resolutions(tgt_size, src_dir, dst_dir):
 			im.thumbnail((tgt_size, tgt_size), Image.LANCZOS)
 
 		# Save the resized image into the destination folder
-		im.save(os.path.join(os.path.abspath(dst_dir), fname) + '.png', 'PNG')
+		im.convert('RGB').save(os.path.join(os.path.abspath(dst_dir), fname) + '.png', 'PNG')
 
 	toc = time.time()
 	print(f"Elapsed time: {(toc - tic) // 60} minutes and {round((toc - tic) % 60, 3)} seconds.")
@@ -99,7 +99,11 @@ def lower_image_resolutions(tgt_size, src_dir, dst_dir):
 	print()
 
 
+def format_imgs(dir_name, size=128):
+	lower_image_resolutions(size, f'F:/Images/{dir_name}', f'F:/Images/{dir_name}_{size}_fmt')
+
+
 if __name__ == '__main__':
 	# Test with images from F:\Images\*
-	lower_image_resolutions(128, 'F:/Images/Eagle_bird', 'F:/Images/Eagle_bird_128_fmt')
-	lower_image_resolutions(128, 'F:/Images/Falcon_bird', 'F:/Images/Falcon_bird_128_fmt')
+	format_imgs('Bird')
+	format_imgs('Fish')
